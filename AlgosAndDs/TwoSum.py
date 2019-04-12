@@ -1,6 +1,7 @@
+from typing import List
+import json
 class Solution:
-    "Given an array of integers, return indices of the two numbers such that they add up to a specific target."
-    def twoSum(self, nums: List[int], target: int) -> List[int]:
+    def two_sum(self,nums,target):
         map = {}
         for i,val in enumerate(nums):
             if -val in map:
@@ -29,16 +30,15 @@ def main():
     while True:
         try:
             line = next(lines)
-            nums = stringToIntegerList(line);
+            nums = stringToIntegerList(line)
             line = next(lines)
-            target = int(line);
+            target = int(line)
             
-            ret = Solution().twoSum(nums, target)
+            ret = Solution().two_sum(nums, target)
 
-            out = integerListToString(ret);
+            out = integerListToString(ret)
             print(out)
         except StopIteration:
             break
 
-if __name__ == '__main__':
-    main()
+print(Solution().two_sum([1,2,4,5],9))
