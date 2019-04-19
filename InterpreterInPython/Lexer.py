@@ -4,7 +4,7 @@ class Lexer:
    
     def __init__(self,input,position,readPosition,ch):
         self.input = input
-        self.postion = position
+        self.position = position
         self.readPosition = readPosition
         self.ch = ch
       
@@ -19,10 +19,10 @@ class Lexer:
 
     def New(self,input):
         self.input = input
-        self.readChar() 
+        self.read_char() 
 
     def next_token(self):
-        self.skip_white_space
+        self.skip_white_space()
         switcher = {
             '=': token.Token(constants.ASSIGN,self.ch),
             ';': token.Token(constants.SEMICOLON,self.ch),
@@ -38,7 +38,7 @@ class Lexer:
 
 
     def next_letter(self):
-        if is_letter(self.ch):
+        if self.is_letter():
             ident = self.read_identifier()
             keyword = token.look_up_indent(ident)
             return token.Token(keyword,ident)  
@@ -48,17 +48,19 @@ class Lexer:
 
     def read_identifier(self):
         pos = self.position
-        while is_letter(self.ch):
+        while self.is_letter():
              self.read_char()
         return self.input[pos:self.postion] 
 
-    def is_letter(ch):
-        return 'a' <= ch and ch <= 'z' or 'A' <= ch and ch <= 'Z' or ch == '_' 
+    def is_letter(self):
+        return 'a' <= self.ch and self.ch <= 'z' or 'A' <= self.ch and self.ch <= 'Z' or self.ch == '_' 
 
 
     def skip_white_space(self):
         while self.ch == ' ' or self.ch == '\t' or self.ch == '\n' or self.ch == '\r':
             self.read_char()
+
+
 
        
  
