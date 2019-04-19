@@ -1,29 +1,3 @@
-ILLEGAL = "ILLEGAL"
-EOF     = "EOF"
-
-# Identifiers + literals
-IDENT = "IDENT" 
-INT   = "INT"  
-
-# Operators
-ASSIGN   = "="
-PLUS     = "+"
-
-# Delimiters
-COMMA     = ","
-SEMICOLON = ";"
-LPAREN = "("
-RPAREN = ")"
-LBRACE = "{"
-RBRACE = "}"
-# Keywords
-LET = "LET"
-FUNCTION = "FUNCTION"
-
-# end 
-
-
-
 class TokenType:
      def __init__(self, name):
          self.name = name
