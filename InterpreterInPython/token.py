@@ -10,7 +10,7 @@ class Token:
         self.literal = literal
 
 keywords = {
-     "fn":     TokenType('FUNCTION'),
+    "fn":     TokenType('FUNCTION'),
 	"let":    TokenType('LET'),
 	"true":   TokenType('TRUE'),
 	"false":  TokenType('FALSE'),

@@ -17,10 +17,24 @@ LPAREN = "("
 RPAREN = ")"
 LBRACE = "{"
 RBRACE = "}"
+
 # Keywords
 FUNCTION = "FUNCTION"
 LET = "LET"
-# end 
+
+# Operators
+ASSIGN   = "="
+PLUS     = "+"
+MINUS    = "-"
+BANG     = "!"
+ASTERISK = "*"
+SLASH    = "/"
+LT = "<"
+GT = ">"
+EQ     = "=="
+NOT_EQ = "!="
+
+
 
 
 
