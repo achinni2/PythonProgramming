@@ -11,26 +11,25 @@ class Lexer():
       
     def read_char(self):
         if self.readPosition >= len(self.input):
-            self.ch = 'EOF'
+            self.ch = ''
         else:
             self.ch = self.input[self.readPosition] 
             self.postion = self.readPosition
             self.readPosition += 1
-        return self
 
     def peek_char(self):
         if self.readPosition >= len(self.input):
-            return 0
+            return ''
         else:
             return self.input[self.readPosition]    
 
     def new(self,input):
         self.input = input
+        self.read_char()
         return self
 
     def next_token(self):
         self.skip_white_space()
-        self.read_char()
         switcher = {
             ';': token.Token(constants.SEMICOLON,self.ch),
             '(': token.Token(constants.LPAREN,self.ch),
@@ -44,9 +43,14 @@ class Lexer():
             '*': token.Token(constants.ASTERISK,self.ch),
             '<': token.Token(constants.LT,self.ch),
             '>': token.Token(constants.GT,self.ch),
-            'EOF' : token.Token(constants.EOF,'')
+            '' : token.Token(constants.EOF,self.ch)
             }     
-        return switcher.get(self.ch,self.next_element())
+        if self.ch not in switcher.keys():
+            return self.next_element()
+        tok = switcher.get(self.ch)
+        self.read_char()
+        return tok
+
 
 
     def next_element(self):
@@ -55,18 +59,26 @@ class Lexer():
             keyword = token.look_up_indent(ident)
             return token.Token(keyword,ident)  
         elif self.is_number():
-            return token.Token(constants.INT,self.read_number)
+            ident = self.read_number()
+            keyword = constants.INT
+            return token.Token(keyword,ident)
         elif self.ch == '!':
             if self.peek_char() == '=':
                char = self.read_char()
-               return token.Token(constants.NOT_EQ,str(char)+str(self.ch))
+               tok = str(char)+str(self.ch)
+               self.read_char()
+               return token.Token(constants.NOT_EQ,tok)
             else:
+               self.read_char() 
                return token.Token(constants.BANG,self.ch)   
         elif self.ch == '=':
             if self.peek_char() == '=':
                 char = self.read_char()
+                tok = str(char)+str(self.ch)
+                self.read_char()
                 return token.Token(constants.EQ,str(char)+str(self.ch))
             else:
+                self.read_char()
                 return token.Token(constants.ASSIGN,self.ch)    
         else:
             return token.Token(constants.ILLEGAL,self.ch)
@@ -80,7 +92,7 @@ class Lexer():
 
     def read_number(self):
         pos = self.position
-        while self. is_number():
+        while self.is_number():
             self.read_char()
         return self.input[pos:self.position]      
 
@@ -93,11 +105,4 @@ class Lexer():
 
     def skip_white_space(self):
         while self.ch == ' ' or self.ch == '\t' or self.ch == '\n' or self.ch == '\r':
-            self.read_char()
-
-       
-
-
-
-       
- 
+              self.read_char()
