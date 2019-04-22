@@ -1,16 +1,17 @@
 import token
 import constants
-class Lexer:
+class Lexer():
    
-    def __init__(self,input,position,readPosition,ch):
+    def __init__(self,input,ch,readPosition,position):
         self.input = input
+        self.ch = ch
         self.position = position
         self.readPosition = readPosition
-        self.ch = ch
+
       
     def read_char(self):
         if self.readPosition >= len(self.input):
-            self.ch = 0
+            self.ch = 'EOF'
         else:
             self.ch = self.input[self.readPosition] 
             self.postion = self.readPosition
@@ -23,12 +24,13 @@ class Lexer:
         else:
             return self.input[self.readPosition]    
 
-    def New(self,input):
+    def new(self,input):
         self.input = input
-        self.read_char() 
+        return self
 
     def next_token(self):
         self.skip_white_space()
+        self.read_char()
         switcher = {
             ';': token.Token(constants.SEMICOLON,self.ch),
             '(': token.Token(constants.LPAREN,self.ch),
@@ -42,8 +44,8 @@ class Lexer:
             '*': token.Token(constants.ASTERISK,self.ch),
             '<': token.Token(constants.LT,self.ch),
             '>': token.Token(constants.GT,self.ch),
-             0 : token.Token(constants.EOF,'')
-            }    
+            'EOF' : token.Token(constants.EOF,'')
+            }     
         return switcher.get(self.ch,self.next_element())
 
 
@@ -59,7 +61,7 @@ class Lexer:
                char = self.read_char()
                return token.Token(constants.NOT_EQ,str(char)+str(self.ch))
             else:
-                return token.Token(constants.BANG,self.ch)   
+               return token.Token(constants.BANG,self.ch)   
         elif self.ch == '=':
             if self.peek_char() == '=':
                 char = self.read_char()
