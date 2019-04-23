@@ -51,12 +51,6 @@ class Identifier(implements(Node,Expression)):
     def token_literal(self):
         return self.token.literal
 
-class Parser:
-    def __init__(self, lexer, curToken, peekToken):
-        self.lexer = lexer
-        self.curToken = curToken
-        self.peekToken = peekToken    
-
 
 
      
