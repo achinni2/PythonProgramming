@@ -1,5 +1,6 @@
 from interface import implements, Interface
 import token
+import constants
 
 class Node(Interface):
     def token_literal(self):
@@ -12,7 +13,7 @@ class Statement(Interface):
         pass
 
 class Expression(Interface):
-    def __init__(self,Node: node):
+    def __init__(self,node):
         self.node = node
     def expression_node(self):
         pass            
@@ -55,7 +56,28 @@ class Parser:
     def __init__(self, lexer, curToken, peekToken):
         self.lexer = lexer
         self.curToken = curToken
-        self.peekToken = peekToken    
+        self.peekToken = peekToken  
+
+    def new(self,lexer):
+        self.lexer = lexer
+        self.next_token
+        self.next_token
+        return self
+    
+    def next_token(self):
+        self.curToken = self.peekToken
+        self.peekToken = self.lexer.next_token()
+
+    def parse_program(self):
+        statements = Statement[]
+        program = Program(statements)
+        while self.curToken.type != constants.EOF:
+            stmt = self.parse_statement()
+            if stmt != None:
+                statements.append(stmt)
+
+        
+
 
 
 
