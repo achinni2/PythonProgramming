@@ -2,7 +2,7 @@ import token
 import constants
 class Lexer():
    
-    def __init__(self,input,ch,readPosition,position):
+    def __init__(self,input,ch=None,readPosition=None,position=None):
         self.input = input
         self.ch = ch
         self.position = position
