@@ -14,7 +14,7 @@ class Statement(Interface):
         pass
 
 class Expression(Interface):
-    def __init__(self,Node: node):
+    def __init__(self,node):
         self.node = node
     def expression_node(self):
         pass            
@@ -120,7 +120,27 @@ class IntegerLiteral(implements(Node,Expression)):
         return self.token.literal
 
     def to_string(self):
-        return self.token.literal     
+        return self.token.literal   
+
+class PrefixExpression(implements(Node,Expression)):
+    def __init__(self, token, operator=None, right = None):
+        self.operator = operator
+        self.token = token
+        self.right = right
+
+    def expression_node(self):
+        pass
+
+    def token_literal(self):
+        return self.token.literal
+
+    def to_string(self):
+        out = bytearray()
+        out.extend('(')
+        out.extend(self.operator)
+        out.extend(self.right.to_string())
+        out.extend(')')
+        return str(out)      
      
 
 

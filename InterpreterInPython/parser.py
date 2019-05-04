@@ -13,28 +13,33 @@ class Parser:
     errors = []
     def __init__(self,lexer,curToken=None,peekToken=None,prefixParserFns=None,infixParserFns=None):
         self.lexer = lexer 
+        self.curToken = curToken
+        self.peekToken = peekToken
+        self.prefixParserFns = prefixParserFns
+        self.infixParserFns = infixParserFns
 
     def new(self,lexer):
         self.lexer = lexer
         self.register_prefix(token.TokenType(constants.IDENT),self.parse_identifier())
         self.register_prefix(token.TokenType(constants.INT),self.parse_integer_literal())
+        self.register_prefix(token.TokenType(constants.BANG),self.parse_prefix_expression())
+        self.register_prefix(token.TokenType(constants.MINUS),self.parse_prefix_expression())
         self.next_token()
         self.next_token()
         return self
 
-    def errors(self):
+    def add_to_errors(self):
         return self.errors
 
-    prefixParserFn = lambda: ast.Expression
-    infixParserFn = lambda ast.Expression: ast.Expression    
+    prefixParserFn = lambda: ast.Expression    
 
     precedences = {
-        LOWEST : 1
-        EQUALS : 2
-        LESSGREATER : 3
-        SUM : 4
-        PRODUCT : 5
-        PREFIX : 6
+        LOWEST : 1,
+        EQUALS : 2,
+        LESSGREATER : 3,
+        SUM : 4,
+        PRODUCT : 5,
+        PREFIX : 6,
         CALL : 7
     }
 
@@ -43,7 +48,7 @@ class Parser:
 
     def peek_error(self,tokenType):
         msg = 'expected next token to be {}, got {} instead'.format(tokenType,self.peekToken.type)
-        errors.append(msg)
+        self.errors.append(msg)
 
     def next_token(self):
         self.curToken = self.peekToken
@@ -61,7 +66,7 @@ class Parser:
 
     def parse_statement(self):
         switcher = {
-            constants.LET: self.parse_let_statement()
+            constants.LET: self.parse_let_statement(),
             constants.RETURN: self.parse_return_statement()
         }   
         return switcher.get(self.curToken.type.name,self.parse_expression_statement()) 
@@ -88,7 +93,7 @@ class Parser:
 
     def parse_expression_statement(self):
         stmt = ast.ExpressionStatement(self.curToken)
-        stmt.expression = self.parse_expression('LOWEST')
+        stmt.expression = self.parse_expression(self.LOWEST)
         if self.peek_token_is is token.TokenType(constants.SEMICOLON):
             self.next_token()
         return stmt   
@@ -96,6 +101,7 @@ class Parser:
     def parse_expression(self,precedence):
         prefix = self.prefixParserFns[self.curToken.type]
         if prefix is None:
+            self.no_prefix_parse_fn_error(self.curToken.type)
             return None
         leftExp = prefix()
         return leftExp    
@@ -111,7 +117,14 @@ class Parser:
         except ValueError:
             self.errors.append('could not parse the {} literal'.format(self.curToken.literal))    
         lit.value = value
-        return lit    
+        return lit   
+
+    def parse_prefix_expression(self):
+        expr = ast.PrefixExpression(self.curToken,self.curToken.literal)
+        self.next_token()
+        expr.right = self.parse_expression(self.PREFIX)
+        return expr
+
 
 
     def cur_token_is(self,tokenType):
@@ -132,4 +145,7 @@ class Parser:
         self.prefixParserFns[tokenType] = prefixParserFn
 
     def register_infix(self,tokenType,infixParserFn):
-        self.infixParserFns[tokenType] = infixParserFn         
+        self.infixParserFns[tokenType] = infixParserFn   
+
+    def no_prefix_parse_fn_error(self,type):
+        self.errors.append('no prefix parse function for the type {}'.format(type.name))          
