@@ -1,6 +1,6 @@
 import constants
 import token
-import ast
+from InterpreterInPython import ast
 from interface import implements, Interface
 class Parser:
     LOWEST = 'LOWEST'
@@ -32,6 +32,7 @@ class Parser:
         return self.errors
 
     prefixParserFn = lambda: ast.Expression    
+    infixParserFn = lambda expression: expression
 
     precedences = {
         LOWEST : 1,
@@ -125,14 +126,12 @@ class Parser:
         expr.right = self.parse_expression(self.PREFIX)
         return expr
 
-
-
     def cur_token_is(self,tokenType):
         return self.curToken.type == tokenType
 
     def peek_token_is(self,tokenType):
         return self.peekToken.type == tokenType
-
+    
     def expect_peek(self,tokenType):
         if self.peek_token_is(tokenType):
             self.next_token()
