@@ -1,8 +1,8 @@
 import token
 import constants
 class Lexer():
-   
-    def __init__(self,input,ch,readPosition,position):
+ 
+    def __init__(self,input,ch=None,readPosition=None,position=None):
         self.input = input
         self.ch = ch
         self.position = position
@@ -101,8 +101,7 @@ class Lexer():
 
     def is_letter(self):
         return 'a' <= self.ch and self.ch <= 'z' or 'A' <= self.ch and self.ch <= 'Z' or self.ch == '_' 
-
-
+    
     def skip_white_space(self):
         while self.ch == ' ' or self.ch == '\t' or self.ch == '\n' or self.ch == '\r':
               self.read_char()
