@@ -1,6 +1,6 @@
 import constants
-import ast
 import token
+import ast
 from interface import implements, Interface
 class Parser:
     def __init__(self, lexer, curToken, peekToken):
